@@ -1,108 +1,111 @@
-import config from './config'
+import express from 'express'
+import { json, urlencoded } from 'body-parser'
+// import config from './config'
 import { connect } from './utils/db'
-import { User } from './models/user.model'
+// import { User } from './models/user.model'
+import userRouter from './routers/user.router'
+
 
 // BASE SETUP
 // =============================================================================
 
-// call the packages we need
-const express    = require('express')    // call express
-const app        = express()       // define our app using express
-const bodyParser = require('body-parser')
+const app = express()       // define our app using express
 
-// configure app to use bodyParser()
-// this will let us get the data from a POST
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(bodyParser.json())
+app.use(json())
+app.use(urlencoded({ extended: true }))
+
+// routes
+app.use('/api/users', userRouter)
 
 // ROUTES FOR OUR API
 // =============================================================================
-const router = express.Router()
+// const router = express.Router()
 
 // middleware to use for all requests
-router.use((req, res, next) => {
-  // do logging
-  console.log('Test middleware.')
-  next() // make sure we go to the next routes and don't stop here
-})
+// router.use((req, res, next) => {
+//   // do logging
+//   console.log('Test middleware.')
+//   next() // make sure we go to the next routes and don't stop here
+// })
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
-router.get('/', (req, res) => {
-    res.json({ message: 'hooray! welcome to our api!' })
-})
+// router.get('/', (req, res) => {
+//     res.json({ message: 'hooray! welcome to our api!' })
+// })
 
 // more routes for our API will happen here
+// router.route('/users')
+//   .post((req, res) => {
+//     const user = new User()
 
-router.route('/users')
-  .post((req, res) => {
-    const user = new User()
+//     user.name = req.body.name
+//     user.age = req.body.age
 
-    user.name = req.body.name
-    user.age = req.body.age
+//     user.save((err) => {
+//       if (!err) {
+//         return res.json({ message: 'User created!' })
+//       }
 
-    user.save((err) => {
-      if (!err) {
-        return res.json({ message: 'User created!' })
-      }
+//       return res.send(err)
+//     })
+//   })
 
-      return res.send(err)
-    })
-  })
+//   .get((req, res) => {
+//     User.find((err, users) => {
+//       if (!err) {
+//         return res.json(users)
+//       }
 
-  .get((req, res) => {
-    User.find((err, users) => {
-      if (!err) {
-        return res.json(users)
-      }
+//       return res.send(err)
+//     })
+//   })
 
-      return res.send(err)
-    })
-  })
+// router.route('/users/:user_id')
+//   .get((req, res) => {
+//     console.log(req.params);
 
-router.route('/users/:user_id')
-  .get((req, res) => {
-    User.findById(req.params.user_id, (err, user) => {
-      if (!err) {
-        return res.json(user)
-      }
+//     User.findById(req.params.user_id, (err, user) => {
+//       if (!err) {
+//         return res.json(user)
+//       }
 
-      return res.send(err)
-    })
-  })
+//       return res.send(err)
+//     })
+//   })
 
-  .put((req, res) => {
-    User.findById(req.params.user_id, (err, user) => {
-      if (err) {
-        return res.send(err)
-      }
+//   .put((req, res) => {
+//     User.findById(req.params.user_id, (err, user) => {
+//       if (err) {
+//         return res.send(err)
+//       }
 
-      user.name = req.body.name
+//       user.name = req.body.name
 
-      user.save((err) => {
-        if (err) {
-          res.send(err)
-        }
+//       user.save((err) => {
+//         if (err) {
+//           res.send(err)
+//         }
 
-        res.json({ message: 'User updated!' })
-      })
-    })
-  })
+//         res.json({ message: 'User updated!' })
+//       })
+//     })
+//   })
 
-  .delete((req, res) => {
-    User.deleteOne({
-      _id: req.params.user_id
-    }, (err, user) => {
-      if (err) {
-        res.send(err)
-      }
+//   .delete((req, res) => {
+//     User.deleteOne({
+//       _id: req.params.user_id
+//     }, (err, user) => {
+//       if (err) {
+//         res.send(err)
+//       }
 
-      res.json({ message: `Successfully deleted user.`})
-    })
-  })
+//       res.json({ message: `Successfully deleted user.`})
+//     })
+//   })
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
-app.use('/api', router)
+// app.use('/api', router)
 
 // START THE SERVER
 // =============================================================================
