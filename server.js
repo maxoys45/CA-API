@@ -1,6 +1,6 @@
 import express from 'express'
 import { json, urlencoded } from 'body-parser'
-// import config from './config'
+import config from './config'
 import { connect } from './utils/db'
 // import { User } from './models/user.model'
 import userRouter from './routers/user.router'
@@ -112,8 +112,8 @@ app.use('/api/users', userRouter)
 export const start = async () => {
   try {
     await connect()
-    app.listen(process.env.PORT, () => {
-      console.log(`REST API on http://localhost:${process.env.PORT}/api`)
+    app.listen(config.PORT, () => {
+      console.log(`REST API on http://localhost:${config.PORT}/api`)
     })
   } catch (e) {
     console.error(e)
