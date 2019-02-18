@@ -1,6 +1,6 @@
 import config from './config'
 import { connect } from './utils/db'
-
+import { User } from './models/user.model'
 
 // BASE SETUP
 // =============================================================================
@@ -9,8 +9,6 @@ import { connect } from './utils/db'
 const express    = require('express')    // call express
 const app        = express()       // define our app using express
 const bodyParser = require('body-parser')
-
-const User = require('./models/user')
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
@@ -40,6 +38,7 @@ router.route('/users')
     const user = new User()
 
     user.name = req.body.name
+    user.age = req.body.age
 
     user.save((err) => {
       if (!err) {
