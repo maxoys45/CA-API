@@ -115,7 +115,7 @@ app.use('/api/users', userRouter)
 export const start = async () => {
   try {
     await connect()
-    app.listen(config.PORT, () => {
+    app.listen(process.env.PORT || config.PORT, () => {
       console.log(`REST API on http://localhost:${config.PORT}/api`)
     })
   } catch (e) {
