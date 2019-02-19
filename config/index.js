@@ -13,8 +13,8 @@ const dev = {
 
 // not sure what to set here
 prod = {
-  DB_URL: "https://mickoin.herokuapp.com/",
+  DB_URL: "mongodb://ds341605.mlab.com:41605/mickoin",
   PORT: 3045
 }
 
-module.exports = dev;
+module.exports = prod;
