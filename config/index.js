@@ -11,8 +11,9 @@ const dev = {
   PORT: 3045
 },
 
-heroku = {
-  DB_URL: "",
+// not sure what to set here
+prod = {
+  DB_URL: "https://mickoin.herokuapp.com/",
   PORT: 3045
 }
 

@@ -43,7 +43,8 @@ export const addNewUser = (req, res) => {
   const user = new User()
 
   user.name = req.body.name
-  user.age = req.body.age
+  user.balance = req.body.balance
+  // user.age = req.body.age
 
   user.save((err) => {
     if (!err) {
@@ -61,7 +62,8 @@ export const updateUser = (req, res) => {
     }
 
     user.name = req.body.name
-    user.age = req.body.age
+    user.balance = req.body.balance
+    // user.age = req.body.age
 
     user.save((err) => {
       if (err) {

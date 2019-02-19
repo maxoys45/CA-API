@@ -1,8 +1,10 @@
 import express from 'express'
 import { json, urlencoded } from 'body-parser'
+import cors from 'cors'
+
 import config from './config'
 import { connect } from './utils/db'
-// import { User } from './models/user.model'
+
 import userRouter from './routers/user.router'
 
 
@@ -11,6 +13,7 @@ import userRouter from './routers/user.router'
 
 const app = express()       // define our app using express
 
+app.use(cors())
 app.use(json())
 app.use(urlencoded({ extended: true }))
 
