@@ -9,17 +9,18 @@ import {
 
 const router = Router()
 
-// replicate this
-// router
-//   .route('/')
-//   .get(controllers.getOne)
-//   .post(controllers.createOne)
+router
+  .route('/')
+  .get(getUsers)
 
+router
+  .route('/new')
+  .post(addNewUser)
 
-router.get('/:user_id', getUser)
-router.get('/', getUsers)
-router.post('/new', addNewUser)
-router.put('/:user_id', updateUser)
-router.delete('/:user_id', deleteUser)
+router
+  .route('/:user_id')
+  .get(getUser)
+  .put(updateUser)
+  .delete(deleteUser)
 
 export default router
