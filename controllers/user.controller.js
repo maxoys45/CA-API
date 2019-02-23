@@ -24,7 +24,8 @@ export const addNewUser = (req, res) => {
   const user = new User()
 
   user.name = req.body.name
-  user.balance = req.body.balance
+  user.balance = 10000
+  user.holdings = []
   // user.age = req.body.age
 
   user.save((err) => {
