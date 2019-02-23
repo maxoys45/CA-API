@@ -9,6 +9,13 @@ import {
 
 const router = Router()
 
+// replicate this
+// router
+//   .route('/')
+//   .get(controllers.getOne)
+//   .post(controllers.createOne)
+
+
 router.get('/:user_id', getUser)
 router.get('/', getUsers)
 router.post('/new', addNewUser)
