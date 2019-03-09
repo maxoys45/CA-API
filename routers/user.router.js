@@ -9,11 +9,9 @@ import {
 
 const router = Router()
 
-// replicate this
-// router
-//   .route('/')
-//   .get(controllers.getOne)
-//   .post(controllers.createOne)
+router
+  .route('/')
+  .get(getUsers)
 
 router
   .route('/')
