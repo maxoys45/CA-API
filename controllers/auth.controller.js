@@ -1,4 +1,5 @@
 import bcrypt from 'bcryptjs'
+import jwt from 'jsonwebtoken'
 
 import { User } from '../models/user.model'
 
@@ -44,6 +45,58 @@ export const userSignup = (req, res, next) => {
           }
         })
       }
+    })
+}
+
+export const userLogin = (req, res, next) => {
+  User.findOne({
+    email: req.body.email
+  })
+    .exec()
+    .then(user => {
+      if (user.length < 1) {
+        return res.status(401).json({
+          message: 'Auth failed'
+        })
+      }
+
+      bcrypt.compare(req.body.password, user.password, (err, result) => {
+        if (err) {
+          console.log(err)
+
+          return res.status(401).json({
+            message: 'Auth failed'
+          })
+        }
+
+        if (result) {
+          const token = jwt.sign(
+            {
+              email: user.email,
+              user_id: user._id
+            },
+            'secretbeavers',
+            {
+              expiresIn: '1h'
+            }
+          )
+          return res.status(200).json({
+            message: 'Auth successful',
+            token
+          })
+        }
+
+        res.status(401).json({
+          message: 'Auth failed'
+        })
+      })
+    })
+    .catch(err => {
+      console.log(err)
+
+      res.status(500).json({
+        error: err
+      })
     })
 }
 

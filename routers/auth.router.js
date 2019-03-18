@@ -1,8 +1,9 @@
 import { Router } from 'express'
 import {
-  userSignin,
+  userLogin,
   userSignup,
   deleteUser } from '../controllers/auth.controller'
+import checkAuth from '../middleware/check-auth'
 
 const router = Router()
 
@@ -11,7 +12,11 @@ router
   .post(userSignup)
 
 router
+  .route('/login')
+  .post(userLogin)
+
+router
   .route('/:user_id')
-  .delete(deleteUser)
+  .delete(checkAuth, deleteUser)
 
 export default router
