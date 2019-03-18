@@ -14,10 +14,6 @@ router
   .get(getUsers)
 
 router
-  .route('/')
-  .get(getUsers)
-
-router
   .route('/:user_id')
   .delete(deleteUser)
 
