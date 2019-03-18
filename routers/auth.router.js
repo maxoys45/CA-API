@@ -1,23 +1,17 @@
 import { Router } from 'express'
 import {
-  userLogin,
-  userRegister
-} from '../controllers/auth.controller'
+  userSignin,
+  userSignup,
+  deleteUser } from '../controllers/auth.controller'
 
 const router = Router()
 
-// replicate this
-// router
-//   .route('/')
-//   .get(controllers.getOne)
-//   .post(controllers.createOne)
+router
+  .route('/signup')
+  .post(userSignup)
 
 router
-  .route('/login')
-  .post(userLogin)
-
-router
-  .route('/register')
-  .post(userRegister)
+  .route('/:user_id')
+  .delete(deleteUser)
 
 export default router

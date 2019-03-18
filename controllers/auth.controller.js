@@ -1,100 +1,67 @@
-import passport from 'passport'
 import bcrypt from 'bcryptjs'
+
 import { User } from '../models/user.model'
 
-
-// Login
-export const userLogin = (req, res, next) => {
-  console.log('req.body', req.body)
-
-  // res.send({ message: req.body });
-
-  // although body is still empty, passport is trying to do it's thing, but redirects are on the localhost:5000 url, not my app. WIP
-  passport.authenticate('local', (err, user, info) => {
-    if (err) {
-      console.log(err);
-
-      return next(err)
-    }
-
-    res.send({ msg: user })
-  })(req, res, next)
-  //  {
-  //   successRedirect: '/dashboard',
-  //   failureRedirect: '/err',
-  //   // failureFlash: true
-  // })(req, res, next)
-}
-
-// Register
-export const userRegister = (req, res) => {
-  const { name, email, password, password2 } = req.body
-  let errors = []
-
-  if (!name || !email || !password || !password2) {
-    errors.push({ msg: 'Please enter all fields' })
-  }
-
-  if (password != password2) {
-    errors.push({ msg: 'Passwords do not match' })
-  }
-
-  if (password.length < 6) {
-    errors.push({ msg: 'Password must be at least 6 characters' })
-  }
-
-  if (errors.length > 0) {
-    errors.forEach((err) => {
-      console.log(err);
-    })
-
-    res.end('errors, check console')
-    /*
-    res.render('register', {
-      errors,
-      email,
-      password,
-      password2
-    })
-    */
-  } else {
-    User.findOne({ email: email }).then(user => {
-      if (user) {
-        errors.push({ msg: 'Email already exists' })
-        // res.render('register', {
-        //   errors,
-        //   name,
-        //   email,
-        //   password,
-        //   password2
-        // })
-        console.log("email already exists")
-      } else {
-        const newUser = new User({
-          name,
-          email,
-          password
+export const userSignup = (req, res, next) => {
+  console.log(req.body.email)
+  User.find({ email: req.body.email })
+    .exec()
+    .then(user => {
+      console.log(user.length)
+      if (user.length >= 1) {
+        return res.status(409).json({
+          message: "Mail exists"
         })
+      } else {
+        bcrypt.hash(req.body.password, 10, (err, hash) => {
+          if (err) {
+            return res.status(500).json({
+              error: err
+            })
+          } else {
+            const user = new User({
+              name: req.body.name,
+              email: req.body.email,
+              password: hash
+            })
 
-        bcrypt.genSalt(10, (err, salt) => {
-          bcrypt.hash(newUser.password, salt, (err, hash) => {
-            if (err) throw err
-            newUser.password = hash
-            newUser
+            user
               .save()
-              .then(user => {
-                // req.flash(
-                //   'success_msg',
-                //   'You are now registered and can log in'
-                // );
-                // res.redirect('/users/login')
+              .then(result => {
+                console.log(result)
 
-                console.log("you are now registered, congrats")
+                res.status(201).json({
+                  message: `User created: ${user.name}`
+                })
               })
-              .catch(err => console.log(err))
-          })
+              .catch(err => {
+                console.log(err)
+
+                res.status(500).json({
+                  error: err
+                })
+              })
+          }
         })
       }
     })
-  }
+}
+
+export const deleteUser = (req, res, next) => {
+  User.remove({
+    _id: req.params.user_id
+  })
+    .exec()
+    .then(result => {
+      res.status(200).json({
+        message: "User deleted"
+      })
+    })
+    .catch(err => {
+      console.log(err)
+
+      res.status(500).json({
+        error: err
+      })
+    })
 }
