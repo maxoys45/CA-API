@@ -10,6 +10,7 @@ export const userSignup = (req, res, next) => {
     .exec()
     .then(user => {
       console.log(user.length)
+
       if (user.length >= 1) {
         return res.status(409).json({
           message: "Mail exists"
@@ -50,12 +51,16 @@ export const userSignup = (req, res, next) => {
 }
 
 export const userLogin = (req, res, next) => {
+  console.log(req.body.email)
+
   User.findOne({
     email: req.body.email
   })
     .exec()
     .then(user => {
       if (!user) {
+        console.log("Did not find user.")
+
         return res.status(401).json({
           message: 'Auth failed'
         })
