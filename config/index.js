@@ -8,7 +8,8 @@
 
 const dev = {
   DB_URL: "mongodb://localhost:27017/mickoin",
-  PORT: 3045
+  PORT: 3045,
+  JWT_SECRET: 'secretbeavers123',
 },
 
 // not sure what to set here

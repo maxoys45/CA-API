@@ -1,11 +1,12 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
+import config from '../config'
 import { User } from '../models/user.model'
 
 export const userSignup = (req, res, next) => {
   console.log(req.body.email)
-  User.find({ email: req.body.email })
+  User.findOne({ email: req.body.email })
     .exec()
     .then(user => {
       console.log(user.length)
@@ -54,7 +55,7 @@ export const userLogin = (req, res, next) => {
   })
     .exec()
     .then(user => {
-      if (user.length < 1) {
+      if (!user) {
         return res.status(401).json({
           message: 'Auth failed'
         })
@@ -62,8 +63,6 @@ export const userLogin = (req, res, next) => {
 
       bcrypt.compare(req.body.password, user.password, (err, result) => {
         if (err) {
-          console.log(err)
-
           return res.status(401).json({
             message: 'Auth failed'
           })
@@ -75,7 +74,7 @@ export const userLogin = (req, res, next) => {
               email: user.email,
               user_id: user._id
             },
-            'secretbeavers',
+            config.JWT_SECRET,
             {
               expiresIn: '1h'
             }
