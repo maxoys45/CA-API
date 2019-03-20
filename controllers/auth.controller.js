@@ -6,11 +6,10 @@ import { User } from '../models/user.model'
 
 export const userSignup = (req, res, next) => {
   console.log(req.body.email)
-  User.findOne({ email: req.body.email })
+
+  User.find({ email: req.body.email })
     .exec()
     .then(user => {
-      console.log(user.length)
-
       if (user.length >= 1) {
         return res.status(409).json({
           message: "Mail exists"
@@ -48,6 +47,13 @@ export const userSignup = (req, res, next) => {
         })
       }
     })
+    .catch(err => {
+      console.log(err)
+
+      res.status(404).json({
+        error: err
+      })
+    })
 }
 
 export const userLogin = (req, res, next) => {
@@ -62,14 +68,14 @@ export const userLogin = (req, res, next) => {
         console.log("Did not find user.")
 
         return res.status(401).json({
-          message: 'Auth failed'
+          message: 'Auth failed: no user found'
         })
       }
 
       bcrypt.compare(req.body.password, user.password, (err, result) => {
         if (err) {
           return res.status(401).json({
-            message: 'Auth failed'
+            message: 'Auth failed: error with bcrypt'
           })
         }
 
@@ -91,7 +97,7 @@ export const userLogin = (req, res, next) => {
         }
 
         res.status(401).json({
-          message: 'Auth failed'
+          message: 'Auth failed: no result?'
         })
       })
     })
